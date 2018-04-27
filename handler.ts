@@ -17,6 +17,40 @@ var poolData = {
 
 var userPool = new CognitoUserPool(poolData);
 
+
+export const listUsers: Handler = async (event: APIGatewayEvent, context: Context, callback: Callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
+    AWS.config.update({
+        region: REGION,
+        accessKeyId: ACCESS_KEY_ID,
+        secretAccessKey: SECRET_ACCESS_KEY
+    });
+    var params = {
+        UserPoolId: USER_POOL_ID, /* required */
+        AttributesToGet: null,
+        // [
+        //   'STRING_VALUE',
+        //   /* more items */
+        // ]
+        Filter: '',
+        Limit: 0,
+        // PaginationToken: 'STRING_VALUE'
+      };
+
+    const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+    cognitoidentityserviceprovider.listUsers(params, function(err, data) {
+        if (err) {
+            console.log('Error: ', err, err.stack); // an error occurred
+        } else {
+            // console.log('Data: ', data);           // successful response
+            data.Users.forEach(item => {
+                console.log('User: ', item.Attributes);
+            });
+        }
+    });
+};
+
 export const bulkSignup: Handler = async (event: APIGatewayEvent, context: Context, callback: Callback) => {
 
     AWS.config.update({

@@ -25,4 +25,10 @@ functions:
           method: get
           path: bulk_signup
 
+  listUsers:
+    handler: handler.listUsers
+    events:
+      - http:
+          method: get
+          path: list_users
 
